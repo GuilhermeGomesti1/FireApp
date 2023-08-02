@@ -13,25 +13,22 @@ export default function Register() {
 
   async function handleRegister(e) {
     e.preventDefault();
-    if (email !== '' && password !== '') {
-      await createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          navigate('/admin', { replace: true })
-        })
-
-        .catch(() => {
-          console.log("Erro ao fazer o cadastro")
-        })
-
+    if (!email || email.trim().length === 0 || !password || password.trim().length === 0) {
+      toast.warn("Preencha todos os campos");
+      return;
     }
-    else {
-      toast.warn("Preencha todos os campos")
-
+    
+    if (password.length < 6) {
+      toast.warn("A senha deve ter no mínimo 6 caracteres");
+      return;
     }
 
-
-
-
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate('/admin', { replace: true });
+    } catch (error) {
+      console.log("Erro ao fazer o cadastro:", error.message);
+    }
   }
 
   return (
