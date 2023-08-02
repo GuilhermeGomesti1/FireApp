@@ -23,6 +23,12 @@ export default function Register() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Email inválido");
+      return;
+    }
+
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       navigate('/admin', { replace: true });
