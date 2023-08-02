@@ -18,24 +18,30 @@ export default function Home() {
 
   async function handleLogin(e){
     e.preventDefault();
-    if(email !== '' && password !== ''){ 
-      await signInWithEmailAndPassword(auth, email, password)
-      .then(()=> {
-        //navegar para /admin
-        navigate('/admin', {replace: true})
-      })
-      .catch(()=> {
-        console.log('erro ao fazer login')
-      })
-    }
-        
-    else { toast.warn("Preencha todos os dados")
-    
+
+
+
+
+
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Email inválido");
+      return;
     }
 
+    if (password.length < 6) {
+      toast.error("A senha deve ter no mínimo 6 caracteres");
+      return;
+    }
 
-  
-
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/admin', { replace: true });
+    } catch (error) {
+      console.log('erro ao fazer login:', error.message);
+      toast.error("Erro ao fazer login. Verifique suas credenciais.");
+    }
   }
 
   return (
